@@ -2,30 +2,30 @@ package nl.teslanet.mule.connectors.coap.options;
 
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.californium.core.coap.BlockOption;
+import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.Option;
+import org.eclipse.californium.core.coap.OptionSet;
 
 
-public class OptionSet extends org.eclipse.californium.core.coap.OptionSet
+public class Options extends OptionSet
 {
-    public OptionSet()
+    public Options()
     {
         super();
     }
 
-    public OptionSet( org.eclipse.californium.core.coap.OptionSet options )
+    public Options( org.eclipse.californium.core.coap.OptionSet options )
     {
         super( options );
     }
 
     @SuppressWarnings("unchecked")
-    public OptionSet( Map< String, Object > props )
+    public Options( Map< String, Object > props )
     {
         super();
 
@@ -285,6 +285,11 @@ public class OptionSet extends org.eclipse.californium.core.coap.OptionSet
                             option.setValue( (byte[]) o );
                             addOption( option );
                         }
+                        else 
+                        {
+                            option.setStringValue( o.toString() );
+                            addOption( option );
+                        }
                     }
             }
         }
@@ -357,7 +362,7 @@ public class OptionSet extends org.eclipse.californium.core.coap.OptionSet
             }
             else
             {
-                return object.toString().getBytes();
+                return object.toString().getBytes( CoAP.UTF8_CHARSET );
             }
         }
         return null;
@@ -487,8 +492,7 @@ public class OptionSet extends org.eclipse.californium.core.coap.OptionSet
         // if an occurrence if a pattern was found in a given string...
         if ( m.find() )
         {
-            return Integer.parseInt( m.group( 0 ) );
-
+            return Integer.parseInt( m.group( 1 ) );
         }
         else
         {
