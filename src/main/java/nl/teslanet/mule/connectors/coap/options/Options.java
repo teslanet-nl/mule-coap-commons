@@ -360,6 +360,10 @@ public class Options extends OptionSet
             {
                 return (byte[]) object;
             }
+            else if ( byte[].class.isInstance( object ))
+            {
+                return (byte[]) object;
+            }
             else
             {
                 return object.toString().getBytes( CoAP.UTF8_CHARSET );
@@ -373,7 +377,7 @@ public class Options extends OptionSet
         // List<byte[]> if_match_list;
         if ( !options.getIfMatch().isEmpty())
         {
-            props.put( PropertyNames.COAP_OPT_IFMATCH_LIST, options.getIfMatch() );
+            props.put( PropertyNames.COAP_OPT_IFMATCH_LIST, ETag.getList( options.getIfMatch()) );
         }
         // String       uri_host;
         if ( options.hasUriHost())
@@ -383,7 +387,7 @@ public class Options extends OptionSet
         // List<byte[]> etag_list;
         if ( !options.getETags().isEmpty())
         {
-            props.put( PropertyNames.COAP_OPT_ETAG_LIST, options.getETags() );
+            props.put( PropertyNames.COAP_OPT_ETAG_LIST, ETag.getList( options.getETags() ));
         }
         // boolean      if_none_match; // true if option is set
         props.put( PropertyNames.COAP_OPT_IFNONMATCH, Boolean.valueOf(  options.hasIfNoneMatch()) );
