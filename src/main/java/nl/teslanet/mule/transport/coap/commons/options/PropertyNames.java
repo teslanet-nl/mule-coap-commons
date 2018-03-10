@@ -12,7 +12,7 @@
  *    (teslanet.nl) Rogier Cobben - initial creation
  ******************************************************************************/
 
-package nl.teslanet.mule.connectors.coap.options;
+package nl.teslanet.mule.transport.coap.commons.options;
 
 
 import java.util.regex.Matcher;

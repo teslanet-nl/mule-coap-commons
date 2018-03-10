@@ -12,7 +12,7 @@
  *    (teslanet.nl) Rogier Cobben - initial creation
  ******************************************************************************/
 
-package nl.teslanet.mule.connectors.coap;
+package nl.teslanet.mule.transport.coap.commons;
 
 public class Defs
 {

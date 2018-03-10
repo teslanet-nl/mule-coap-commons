@@ -12,7 +12,7 @@
  *    (teslanet.nl) Rogier Cobben - initial creation
  ******************************************************************************/
 
-package nl.teslanet.mule.connectors.coap.exceptions;
+package nl.teslanet.mule.transport.coap.commons.exceptions;
 
 import org.eclipse.californium.core.coap.CoAP.Code;
 import org.eclipse.californium.core.coap.CoAP.Type;
