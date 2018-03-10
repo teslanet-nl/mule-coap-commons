@@ -12,7 +12,7 @@ public class PropertyNames
     //request
     public static final String COAP_REQUEST_CODE= "coap.request.code";
 
-    public static final String COAP_REQUEST_ADDRESS= "coap.request.adress";
+    public static final String COAP_REQUEST_ADDRESS= "coap.request.address";
 
     public static final String COAP_REQUEST_URI= "coap.request.uri";
 
@@ -24,6 +24,8 @@ public class PropertyNames
 
     //response
     public static final String COAP_RESPONSE_CODE= "coap.response.code";
+    
+    public static final String COAP_RESPONSE_SUCCESS= "coap.response.success";
 
     //options
     public static final String COAP_OPT_IFMATCH_LIST= "coap.opt.if_match.list";

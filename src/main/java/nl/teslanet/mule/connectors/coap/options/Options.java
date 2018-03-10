@@ -364,6 +364,10 @@ public class Options extends OptionSet
             {
                 return (byte[]) object;
             }
+            else if ( ETag.class.isInstance( object ))
+            {
+                return ((ETag) object).asBytes();
+            }
             else
             {
                 return object.toString().getBytes( CoAP.UTF8_CHARSET );
