@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018 (teslanet.nl) Rogier Cobben.
+ * Copyright (c) 2017, 2018 (teslanet.nl) Rogier Cobben.
  * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -15,10 +15,7 @@
 package nl.teslanet.mule.transport.coap.commons.options;
 
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.eclipse.californium.core.coap.CoAP.ResponseCode;
 
 
 public class PropertyNames

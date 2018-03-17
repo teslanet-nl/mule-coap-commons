@@ -1,14 +1,17 @@
+# Mule CoAP connector - Commons
 ![Mule-Coap logo](coap-logo.svg)
 
-Mule CoAP connector is an implementation of the [RFC7252 - Constrained Application Protocol](http://tools.ietf.org/html/rfc7252) as a Anypoint Connector. 
-With it Mule applications become CoAP capable and can communicate with other CoAP capable devices and services, realising IoT solutions. 
+Mule CoAP connector is an Anypoint Connector implementation of the [RFC7252 - Constrained Application Protocol](http://tools.ietf.org/html/rfc7252). 
+With it Mule applications become CoAP capable and can communicate with other CoAP capable devices and services, realising Internet of Things solutions (IoT). 
 
-The connector uses Californium, a Java CoAP implementation. More information about Californium and CoAP can be found at
-[http://www.eclipse.org/californium/](http://www.eclipse.org/californium/)
-and [http://coap.technology/](http://coap.technology/).
+The connector uses Californium, a Java CoAP implementation. More information about Californium and CoAP can be found at:
 
-This Java component - the Mule CoAP Commons component - is one of three parts of the Mule CoAP implementation.  
-The other two being the Mule CoAP Server Connector and Mule CoAP Server Client Connector. The Commons component contains classes that are common to these connectors. 
+* [http://www.eclipse.org/californium/](http://www.eclipse.org/californium/)
+* [http://coap.technology/](http://coap.technology/).
+
+This Java component - the Commons component - is one of three parts of the Mule CoAP package.  
+The other two being the CoapServer Connector and CoapClient Connector. 
+The Commons component contains java-classes that are common to these two connectors. 
 
 # Build using Maven
 
@@ -19,7 +22,7 @@ Then simply run the following from the project's root directory:
 $ mvn clean install
 ```
 
-# Using Mule CoAP Commons component in Maven Projects
+# Using in Maven Projects
 
 Mule CoAP artifact releases will be publishedses to [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Cmule-coap).
 Usually the Commons component dependency will added through one of the connector pom's and there is no need to add the 
@@ -39,14 +42,14 @@ to your `pom.xml` (without the dots):
   ...
 ```
 
-##### Current Builds
+# Current Builds
 
 TBD
 
 
 # Contact
 
-A bug, an idea, an issue? Create an issue here on GitHub.
+A bug, an idea, an issue? Create an issue on https://github.com/rogierc/mule-coap-commons/issues.
 
 # Contributing
 
