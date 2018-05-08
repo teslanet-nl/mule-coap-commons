@@ -73,7 +73,7 @@ public class Options extends OptionSet
                 /*
                 etag_list           = null; // new LinkedList<byte[]>();*/
                 case PropertyNames.COAP_OPT_ETAG_LIST:
-                    //TODO check whether multiple values is valid
+                    //TODO multiple values not valid in responses, add check here?
                     if ( Collection.class.isInstance( e.getValue() ) )
                     {
                         for ( Object val : ( (Collection< Object >) e.getValue() ) )
@@ -217,7 +217,8 @@ public class Options extends OptionSet
                         assureBlock1Exists();
                         getBlock1().setSzx( BlockOption.size2Szx( toInteger( e.getValue() )) );
                     }
-                    break;                case PropertyNames.COAP_OPT_BLOCK1_SZX:
+                    break;                
+                case PropertyNames.COAP_OPT_BLOCK1_SZX:
                     if ( Object.class.isInstance( e.getValue() ) )
                     {
                         assureBlock1Exists();

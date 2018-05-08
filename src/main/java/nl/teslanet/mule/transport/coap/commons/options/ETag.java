@@ -15,12 +15,21 @@
 package nl.teslanet.mule.transport.coap.commons.options;
 
 
+import java.nio.ByteBuffer;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.californium.core.Utils;
 import org.eclipse.californium.core.coap.CoAP;
+
+//TODO size of etag should be limited to 1 to 8 bytes
+//TODO constructor for long for convenience:
+//Long millis= ...;
+//ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+//buffer.putLong( millis );
+//etags.put( key, new ETag( buffer.array()));
 
 
 public class ETag implements Cloneable
