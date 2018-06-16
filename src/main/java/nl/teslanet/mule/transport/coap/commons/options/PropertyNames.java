@@ -23,6 +23,8 @@ public class PropertyNames
     //request
     public static final String COAP_REQUEST_CODE= "coap.request.code";
 
+    public static final String COAP_REQUEST_CONFIRMABLE= "coap.request.confirmable";
+
     public static final String COAP_REQUEST_ADDRESS= "coap.request.address";
 
     public static final String COAP_REQUEST_URI= "coap.request.uri";
