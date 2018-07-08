@@ -49,7 +49,7 @@ TBD
 
 # Contact
 
-A bug, an idea, an issue? Create an issue on https://github.com/rogierc/mule-coap-commons/issues.
+A bug, an idea, an issue? Create an issue on https://github.com/teslanet-nl/mule-coap-commons/issues.
 
 # Contributing
 
