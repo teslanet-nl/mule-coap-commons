@@ -25,8 +25,8 @@
         </developer>
     </developers>
     <scm>
-        <connection>scm:git:git://github.com/teslanet-nl/mule-coap-commons.git</connection>
-        <developerConnection>scm:git:ssh://github.com:teslanet-nl/mule-coap-commons.git</developerConnection>
+        <connection>scm:hg:git+https://github.com/rogierc/mule-coap-commons.git</connection>
+        <developerConnection>scm:hg:git+https://github.com/rogierc/mule-coap-commons.git</developerConnection>
         <url>http://github.com/teslanet-nl/mule-coap-commons/tree/master</url>
     </scm>
 
