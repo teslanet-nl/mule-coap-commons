@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.teslanet.mule.transport.coap</groupId>
@@ -7,7 +8,7 @@
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Mule CoAP Connector Common classes used by mule-coap-server and mule-coap-client</description>
-    <url>http://github.com/simpligility/ossrh-demo</url>
+    <url>http://www.teslanet.nl</url>
     <licenses>
         <license>
             <name>Eclipse Public License - v 2.0</name>
@@ -23,8 +24,8 @@
         </developer>
     </developers>
     <scm>
-        <connection>scm:hg:git+https://github.com/rogierc/mule-coap-commons.git</connection>
-        <developerConnection>scm:hg:git+https://github.com/rogierc/mule-coap-commons.git</developerConnection>
+        <connection>scm:hg:git+https://github.com/teslanet-nl/mule-coap-commons.git</connection>
+        <developerConnection>scm:hg:git+https://github.com/teslanet-nl/mule-coap-commons.git</developerConnection>
         <url>http://github.com/teslanet-nl/mule-coap-commons/tree/master</url>
       <tag>HEAD</tag>
   </scm>
@@ -107,6 +108,7 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.5.3</version>
                 <configuration>
+                	<username>${release.user}</username>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <useReleaseProfile>false</useReleaseProfile>
                     <releaseProfiles>release</releaseProfiles>
@@ -117,13 +119,11 @@
     </build>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.californium/californium-core -->
         <dependency>
             <groupId>org.eclipse.californium</groupId>
             <artifactId>californium-core</artifactId>
             <version>1.0.6</version>
         </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
