@@ -16,7 +16,10 @@ package nl.teslanet.mule.transport.coap.commons.tests;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import nl.teslanet.mule.transport.coap.commons.options.ETag;
 
@@ -25,6 +28,9 @@ import nl.teslanet.mule.transport.coap.commons.options.ETag;
  *
  */
 public class ETagTest {
+
+	@Rule 
+	public ExpectedException exception = ExpectedException.none();
 
 	@Test
 	public void testConstructor() {
@@ -61,5 +67,16 @@ public class ETagTest {
 		assertFalse("ETag.equals failed to compare to unequal etags", etag1.equals(etag4));
 		assertFalse("ETag.equals failed to compare to unequal etags", etag4.equals(etag1));
 	}
-
+	
+	@Ignore // should Etag class validate or californium?
+	@Test
+	public void tooLongString() throws Exception 
+	{
+		String etagValue1 = "112233445566778899";
+		ETag etag1 = null;
+	    exception.expect(Exception.class);
+	    //exception.expectMessage(containsString("exception message"));
+		etag1 = new ETag(etagValue1);
+		org.junit.Assert.assertNotNull(etag1);
+	}
 }
