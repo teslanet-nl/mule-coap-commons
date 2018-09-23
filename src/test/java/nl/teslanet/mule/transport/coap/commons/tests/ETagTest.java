@@ -68,7 +68,7 @@ public class ETagTest {
 		assertFalse("ETag.equals failed to compare to unequal etags", etag4.equals(etag1));
 	}
 	
-	@Ignore // should Etag class validate or californium?
+	@Ignore //validation is done by californium?
 	@Test
 	public void tooLongString() throws Exception 
 	{
