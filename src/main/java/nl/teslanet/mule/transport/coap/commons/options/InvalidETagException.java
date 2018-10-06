@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2018 (teslanet.nl) Rogier Cobben.
+ * Copyright (c) 2018 (teslanet.nl) Rogier Cobben.
  * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
@@ -12,17 +12,26 @@
  *    (teslanet.nl) Rogier Cobben - initial creation
  ******************************************************************************/
 
-package nl.teslanet.mule.transport.coap.commons;
+package nl.teslanet.mule.transport.coap.commons.options;
 
-public class Defs
+
+/**
+ *  Exception that is thrown when an attempt is made to construct an invalid ETag object.
+ */
+public class InvalidETagException extends Exception
 {
-    public static final String COAP_URI_WILDCARD= "*";
 
-    public static final String COAP_URI_PATHSEP= "/";
-    public static final String COAP_URI_ROOTRESOURCE= "";
-    
-    private Defs()
+    /**
+     * serial version id
+     */
+    private static final long serialVersionUID= 1L;
+
+    /**
+     * Construct exception with given 
+     * @param message
+     */
+    public InvalidETagException( String message )
     {
-        
+        super( message );
     }
 }
