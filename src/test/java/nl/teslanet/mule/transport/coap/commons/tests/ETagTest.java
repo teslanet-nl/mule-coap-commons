@@ -422,7 +422,7 @@ public class ETagTest
         byteslist.add( etagValue3 );
         byteslist.add( etagValue4 );
         
-        byteslistofone.add( etag4.asBytes() );
+        byteslistofone.add( etagValue4 );
         
         List<ETag> list= ETag.getList( byteslist );
         List<ETag> listofone= ETag.getList( byteslistofone );
@@ -434,6 +434,12 @@ public class ETagTest
         assertTrue( "ETag.getList doesn't contain etag" , etag4.isIn( list ));
         assertFalse( "ETag.getList does contain etag" , etag5.isIn( list ));
         
+        assertTrue( "ETag.getList doesn't contain etag" , list.contains( etag1 ));
+        assertTrue( "ETag.getList doesn't contain etag" , list.contains( etag2 ));
+        assertTrue( "ETag.getList doesn't contain etag" , list.contains( etag3 ));
+        assertTrue( "ETag.getList doesn't contain etag" , list.contains( etag4 ));
+        assertFalse( "ETag.getList does contain etag" , list.contains( etag5 ));
+
         assertTrue( "ETag.getList doesn't contain etag" , new ETag( etagValue1 ).isIn( list ));
         assertTrue( "ETag.getList doesn't contain etag" , new ETag( etagValue2 ).isIn( list ));
         assertTrue( "ETag.getList doesn't contain etag" , new ETag( etagValue3 ).isIn( list ));

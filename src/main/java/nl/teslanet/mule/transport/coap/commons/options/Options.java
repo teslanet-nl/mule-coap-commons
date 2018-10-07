@@ -49,7 +49,7 @@ public class Options
     }
 
     /**
-     * Constucts Options based on existing OptionSet.
+     * Constructs Options based on existing OptionSet.
      * Note that is keeps a reference to the OptionSet in stead of a deep copy - handle with care.
      * @param optionSet Set of options that will be used as a reference.
      */
@@ -243,6 +243,7 @@ public class Options
                     }
                     break;
                 case PropertyNames.COAP_OPT_LOCATIONPATH:
+                    //TODO prefix with "/" ?
                     if ( Object.class.isInstance( e.getValue() ) )
                     {
                         optionSet.setLocationPath( e.getValue().toString() );
