@@ -15,11 +15,12 @@
 package nl.teslanet.mule.transport.coap.commons.options;
 
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-//TODO size of etag should be limited to 1 to 8 bytes
+
 //TODO constructor for long for convenience:
 //Long millis= ...;
 //ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
@@ -29,23 +30,20 @@ import java.util.List;
 /**
  * Implementation of the Etag concept for convenience.
  * It eases the handling of Etag values in Mule flows. 
- * Etags can be constructed from byte array as well as from strings 
- * containing the hexadecimal representation. 
- * An etag is immutable.
- * @author Rogier Cobben
- *
+ * Etags can be constructed from byte array as well as from strings that 
+ * contain a hexadecimal representation. 
+ * An etag object is immutable and comparable to other etags.
  */
-/**
- * @author rogier
- *
- */
-public final class ETag implements Cloneable, Comparable< ETag >
+
+public final class ETag implements Comparable< ETag >
 {
     /**
      * The etag value
      */
     private final byte[] value;
-   
+
+    private int hashCode= 0;
+
     /**
      * Constructs an etag from a byte array value.
      * @param etag byte array containing the etag value
@@ -53,21 +51,24 @@ public final class ETag implements Cloneable, Comparable< ETag >
      */
     public ETag( byte[] etag ) throws InvalidETagException
     {
-        if ( etag == null)
+        if ( etag == null )
         {
-            throw new InvalidETagException( "ETag value null is not allowed"); 
+            throw new InvalidETagException( "ETag value null is not allowed" );
         }
         if ( etag.length < 1 || etag.length > 8 )
         {
             throw new InvalidETagException( "ETag length invalid, must be between 1..8 bytes. Given length is: " + etag.length );
-        }      
+        }
         this.value= etag.clone();
-        
+
     }
 
     /**
-     * Constructs an etag from a string containing the hexadecimal representation, like '11FF'
-     * @param etag Byte array containing the etag value.
+     * Constructs an etag from a string containing the hexadecimal representation
+     * where two characters convert to one byte which contains the designated value.
+     * For instance the string '11FF' will result in an etag value of two bytes containing
+     * the decimal values of 17 and 255.   
+     * @param hexString contains the hexadecimal representation of the etag value.
      * @throws InvalidETagException when given string does not represent a etag length of 1..8 bytes
      */
     public ETag( String hexString ) throws InvalidETagException
@@ -75,22 +76,22 @@ public final class ETag implements Cloneable, Comparable< ETag >
         if ( hexString == null )
         {
             throw new InvalidETagException( "Given hexString is null." );
-        }   
+        }
         int length= hexString.length() / 2;
         //check even number of characters
         if ( length * 2 != hexString.length() )
         {
             throw new InvalidETagException( "Given hexString must have even number of characters. The number found: " + hexString.length() );
-        }             
+        }
         if ( length < 1 || length > 8 )
         {
             throw new InvalidETagException( "ETag length invalid, must be between 1..8 bytes. Given length is: " + length );
-        }  
-        value= new byte [ length ];
+        }
+        value= new byte [length];
         for ( int i= 0; i < value.length; i++ )
         {
             int index= i * 2;
-            int v= Integer.parseInt( hexString.substring( index, index + 2 ), 16 );
+            int v= Integer.parseInt( hexString.substring( index, index + 2 ).toLowerCase(), 16 );
             value[i]= (byte) v;
         }
     }
@@ -104,31 +105,10 @@ public final class ETag implements Cloneable, Comparable< ETag >
         return value.clone();
     }
 
-    /**
-     * Converts an etag value to a string containing the hexadecimal representation.
-     * @param bytes The etag value.
-     * @return The string containing the hexadecimal representation.
-     */
-    public static String toHexString( byte[] bytes )
-    {
-        StringBuilder sb= new StringBuilder();
-        if ( bytes == null )
-        {
-            //sb.append( "null" );
-        }
-        else
-        {
-            for ( byte b : bytes )
-            {
-                sb.append( String.format( "%02x", b & 0xFF ) );
-            }
-        }
-        return sb.toString();
-    }
-
 
     /**
      * Gets the etag value as string containing the hexadecimal representation.
+     * Hexadecimal values a-f will be lower case.
      * @return The string containing the hexadecimal representation.
      */
     @Override
@@ -156,18 +136,11 @@ public final class ETag implements Cloneable, Comparable< ETag >
      */
     static public ETag create( String hexString ) throws InvalidETagException
     {
-        byte[] etag= new byte [hexString.length() / 2];
-        for ( int i= 0; i < etag.length; i++ )
-        {
-            int index= i * 2;
-            int v= Integer.parseInt( hexString.substring( index, index + 2 ), 16 );
-            etag[i]= (byte) v;
-        }
-        return new ETag( etag );
+        return new ETag( hexString );
     }
 
     /**
-     * Convenience method to create a list of etags.
+     * Convenience method to create a list of etags form a list of byte arrays.
      * @param etags The List of Byte array to make a list of etags from.
      * @return The list of etags. 
      * @throws InvalidETagException when a given etag has not a length of 1..8 bytes
@@ -182,7 +155,6 @@ public final class ETag implements Cloneable, Comparable< ETag >
         return result;
     }
 
-
     /**
      * Check a collection of etags whether it contains the etag.
      * @param etags The collection of etags to check.
@@ -196,7 +168,7 @@ public final class ETag implements Cloneable, Comparable< ETag >
         }
         return false;
     }
-    
+
     /**
      * Check etag on equality to another etag. 
      * Etags are equal when there byte arrays contain the same sequence of bytes. 
@@ -206,17 +178,11 @@ public final class ETag implements Cloneable, Comparable< ETag >
     @Override
     public boolean equals( Object o )
     {
-        ETag other = (ETag) o;
-        if ( null == other ) throw new NullPointerException( "Etag cannot be compared to null");
+        ETag other= (ETag) o;
+        if ( null == other ) return false;
         if ( this == other ) return true;
-        if ( this.value.length != other.value.length ) return false;
-        for ( int i= 0; i < this.value.length && i < other.value.length; i++ )
-        {
-            if ( this.value[i] != other.value[i] ) return false;
-        }
-        return true;
+        return Arrays.equals( this.value, other.value );
     }
-
 
     /* (non-Javadoc)
      * @see java.lang.Comparable#compareTo(java.lang.Object)
@@ -224,7 +190,7 @@ public final class ETag implements Cloneable, Comparable< ETag >
     @Override
     public int compareTo( ETag other )
     {
-        if ( null == other ) throw new NullPointerException( "Etag cannot be compared to null");
+        if ( null == other ) return 1;
         if ( this == other ) return 0;
         if ( this.value.length < other.value.length ) return -1;
         if ( this.value.length > other.value.length ) return 1;
@@ -232,21 +198,41 @@ public final class ETag implements Cloneable, Comparable< ETag >
         {
             if ( this.value[i] < other.value[i] ) return -1;
             if ( this.value[i] > other.value[i] ) return 1;
-        }    
+        }
         return 0;
     }
-    
-    @Override 
+
+    @Override
     public int hashCode()
     {
-        
-        int hashcode= 0;
-        
-        for ( int i= 0  ; i < this.value.length ; i++ )
+        if ( this.hashCode == 0 )
         {
-            hashcode+= this.value[i];
+            this.hashCode= Arrays.hashCode( this.value );
         }
-        
-        return hashcode;
+        return this.hashCode;
     }
+    
+    /**
+     * Converts an etag value to a string containing the hexadecimal representation.
+     * Hexadecimal values a-f will be lower case.
+     * @param bytes The etag value.
+     * @return The string containing the hexadecimal representation.
+     */
+    public static String toHexString( byte[] bytes )
+    {
+        StringBuilder sb= new StringBuilder();
+        if ( bytes == null )
+        {
+            //sb.append( "null" );
+        }
+        else
+        {
+            for ( byte b : bytes )
+            {
+                sb.append( String.format( "%02x", b & 0xFF ) );
+            }
+        }
+        return sb.toString();
+    }
+
 }
