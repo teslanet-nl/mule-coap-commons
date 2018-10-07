@@ -130,7 +130,7 @@ public final class ETag implements Comparable< ETag >
 
     /**
      * Static function that creates etag from hexadecimal string.
-     * @param hexstring
+     * @param hexString the hexadecimal string to create etag from.
      * @return The etag object created.
      * @throws InvalidETagException when given string does not represent a etag length of 1..8 bytes
      */
@@ -172,7 +172,7 @@ public final class ETag implements Comparable< ETag >
     /**
      * Check etag on equality to another etag. 
      * Etags are equal when there byte arrays contain the same sequence of bytes. 
-     * @param other The etag to test on equality
+     * @param o The etag object to test for equality
      * @return True 
      */
     @Override
