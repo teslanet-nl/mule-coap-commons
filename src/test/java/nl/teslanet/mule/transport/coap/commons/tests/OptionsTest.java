@@ -22,6 +22,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.californium.core.coap.BlockOption;
+import org.eclipse.californium.core.coap.Option;
 import org.eclipse.californium.core.coap.OptionSet;
 import org.junit.Rule;
 import org.junit.Test;
@@ -84,7 +86,7 @@ public class OptionsTest
         options= new Options( props );
 
         assertNotNull( "Options contruction with empty property map failed", options );
-        assertEquals( "Options contruction with one property failed", options.getOptionSet().getObserve(), new Integer( 123 ) );
+        assertEquals( "Options contruction with one property failed", new Integer( 123 ), options.getOptionSet().getObserve() );
     }
 
     @Test
@@ -121,7 +123,7 @@ public class OptionsTest
         Options options= new Options( props );
         options.getOptionSet().getObserve();
 
-        assertEquals( "Options contruction with empty property map failed", options.getOptionSet().getObserve(), new Integer( 45 ) );
+        assertEquals( "Options contruction with empty property map failed", new Integer( 45 ), options.getOptionSet().getObserve() );
     }
 
     @Test
@@ -134,7 +136,7 @@ public class OptionsTest
         Options options= new Options( props );
         options.getOptionSet().getObserve();
 
-        assertEquals( "Options contruction with empty property map failed", options.getOptionSet().getObserve(), new Integer( 45 ) );
+        assertEquals( "Options contruction with empty property map failed", new Integer( 45 ), options.getOptionSet().getObserve() );
     }
 
     @Test
@@ -147,7 +149,7 @@ public class OptionsTest
         Options options= new Options( props );
         options.getOptionSet().getObserve();
 
-        assertEquals( "Options contruction with empty property map failed", options.getOptionSet().getObserve(), new Integer( 45 ) );
+        assertEquals( "Options contruction with empty property map failed", new Integer( 45 ), options.getOptionSet().getObserve() );
     }
 
     @Test
@@ -156,7 +158,7 @@ public class OptionsTest
         OptionSet set= new OptionSet();
         byte[] etagValue1= { (byte) 0x00, (byte) 0xFF };
         byte[] etagValue2= { (byte) 0x11, (byte) 0xFF };
-        set.addIfMatch( etagValue1 );
+        set.addIfMatch( etagValue1.clone() );
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
@@ -280,7 +282,7 @@ public class OptionsTest
 
         Options.fillProperties( set, props );
 
-        assertEquals( "coap.opt.if_match.list: wrong number of etags", props.get( "coap.opt.uri_host" ), host );
+        assertEquals( "coap.opt.uri_host: wrong value", host, props.get( "coap.opt.uri_host" ) );
     }
 
     @Test
@@ -294,7 +296,7 @@ public class OptionsTest
         OptionSet set= new OptionSet();
         Options.fillOptionSet( set, props, true );
 
-        assertEquals( "uri_host option has wrong value", set.getUriHost(), host );
+        assertEquals( "coap.opt.uri_host: wrong value", host, set.getUriHost() );
 
         props.clear();
         props.put( "coap.opt.uri_host", new StringWrapper( host ) );
@@ -302,7 +304,7 @@ public class OptionsTest
         set= new OptionSet();
         Options.fillOptionSet( set, props, true );
 
-        assertEquals( "uri_host option has wrong value", set.getUriHost(), host );
+        assertEquals( "coap.opt.uri_host: wrong value", host, set.getUriHost() );
     }
 
     @Test
@@ -311,7 +313,7 @@ public class OptionsTest
         OptionSet set= new OptionSet();
         byte[] etagValue1= { (byte) 0x00, (byte) 0xFF };
         byte[] etagValue2= { (byte) 0x11, (byte) 0xFF };
-        set.addETag( etagValue1 );
+        set.addETag( etagValue1.clone() );
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
@@ -346,7 +348,7 @@ public class OptionsTest
         assertFalse( "coap.opt.etag.list: etag not expected", list.contains( new ETag( etagValue2 ) ) );
 
         props.clear();
-        props.put( "coap.opt.etag.list", etagValue1 );
+        props.put( "coap.opt.etag.list", etagValue1.clone() );
 
         set= new OptionSet();
         Options.fillOptionSet( set, props, true );
@@ -367,8 +369,8 @@ public class OptionsTest
         byte[] etagValue2= { (byte) 0x11, (byte) 0xFF };
         byte[] etagValue3= { (byte) 0x22, (byte) 0xFF };
 
-        set.addETag( new ETag( etagValue1 ).asBytes() );
-        set.addETag( new ETag( etagValue2 ).asBytes() );
+        set.addETag( etagValue1.clone() );
+        set.addETag( etagValue2.clone() );
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
@@ -408,8 +410,8 @@ public class OptionsTest
 
         props.clear();
         LinkedList< byte[] > bytelist= new LinkedList< byte[] >();
-        bytelist.add( etagValue1 );
-        bytelist.add( etagValue2 );
+        bytelist.add( etagValue1.clone() );
+        bytelist.add( etagValue2.clone() );
         props.put( "coap.opt.etag.list", list );
 
         set= new OptionSet();
@@ -604,10 +606,10 @@ public class OptionsTest
 
         assertNotNull( list );
         assertEquals( "coap.opt.uri_path.list: wrong number of path segment", 2, list.size() );
-        assertEquals( "coap.opt.location_path.list: missing path segment", value1, list.get( 0 ) );
-        assertEquals( "coap.opt.location_path.list: missing path segment", value2, list.get( 1 ) );
-        assertFalse( "coap.opt.location_path.list: path segment not expected", list.contains( value3 ) );
-        assertEquals( "coap.opt.location_path: wrong path", total, props.get( "coap.opt.uri_path" ) );
+        assertEquals( "coap.opt.uri_path.list: missing path segment", value1, list.get( 0 ) );
+        assertEquals( "coap.opt.uri_path.list: missing path segment", value2, list.get( 1 ) );
+        assertFalse( "coap.opt.uri_path.list: path segment not expected", list.contains( value3 ) );
+        assertEquals( "coap.opt.uri_path: wrong path", total, props.get( "coap.opt.uri_path" ) );
 
     }
 
@@ -630,7 +632,7 @@ public class OptionsTest
 
         assertEquals( "coap.opt.uri_path.list: wrong number of path segment", 2, set.getURIPathCount() );
         List< String > uripathlist= set.getUriPath();
-        assertEquals( "coap.opt.uri_path.list: missing path segment", value1 , uripathlist.get( 0 ));
+        assertEquals( "coap.opt.uri_path.list: missing path segment", value1, uripathlist.get( 0 ) );
         assertEquals( "coap.opt.uri_path.list: missing path segment", value2, uripathlist.get( 1 ) );
         assertFalse( "coap.opt.uri_path.list: path segment not expected", uripathlist.contains( value3 ) );
         assertEquals( "coap.opt.uri_path: wrong path", total, set.getUriPathString() );
@@ -648,7 +650,6 @@ public class OptionsTest
         assertFalse( "coap.opt.uri_path.list: path segment not expected", uripathlist.contains( value3 ) );
         assertEquals( "coap.opt.uri_path: wrong path", total, set.getUriPathString() );
     }
-
 
     @Test
     public void testOptionContentFormat() throws InvalidETagException
@@ -674,7 +675,7 @@ public class OptionsTest
         OptionSet set= new OptionSet();
         Options.fillOptionSet( set, props, true );
 
-        assertEquals( "coap.opt.content_format: wrong value", format, new Integer( set.getContentFormat() ));
+        assertEquals( "coap.opt.content_format: wrong value", format, new Integer( set.getContentFormat() ) );
 
         props.clear();
         props.put( "coap.opt.content_format", new String( "40" ) );
@@ -682,7 +683,7 @@ public class OptionsTest
         set= new OptionSet();
         Options.fillOptionSet( set, props, true );
 
-        assertEquals( "coap.opt.content_format: wrong value", format, new Integer( set.getContentFormat() ));
+        assertEquals( "coap.opt.content_format: wrong value", format, new Integer( set.getContentFormat() ) );
 
         props.clear();
         props.put( "coap.opt.content_format", new StringWrapper( "40" ) );
@@ -690,10 +691,9 @@ public class OptionsTest
         set= new OptionSet();
         Options.fillOptionSet( set, props, true );
 
-        assertEquals( "coap.opt.content_format: wrong value", format, new Integer( set.getContentFormat() ));
+        assertEquals( "coap.opt.content_format: wrong value", format, new Integer( set.getContentFormat() ) );
 
-     }
-
+    }
 
     @Test
     public void testOptionMaxAge() throws InvalidETagException
@@ -745,8 +745,663 @@ public class OptionsTest
 
         assertEquals( "coap.opt.max_age: wrong value", maxage, set.getMaxAge() );
 
-     }
-    
+    }
+
+    @Test
+    public void testOptionSetUriQuery() throws InvalidETagException
+    {
+        OptionSet set= new OptionSet();
+        String value1= "this";
+        String value2= "is";
+        String value3= "some=query";
+        String total= "this&is";
+
+        set.addUriQuery( value1 );
+        set.addUriQuery( value2 );
+
+        HashMap< String, Object > props= new HashMap< String, Object >();
+
+        Options.fillProperties( set, props );
+
+        @SuppressWarnings("unchecked")
+        List< ETag > list= (List< ETag >) props.get( "coap.opt.uri_query.list" );
+
+        assertNotNull( list );
+        assertEquals( "coap.opt.uri_query.list: wrong number of query segment", 2, list.size() );
+        assertEquals( "coap.opt.uri_query.list: missing query segment", value1, list.get( 0 ) );
+        assertEquals( "coap.opt.uri_query.list: missing query segment", value2, list.get( 1 ) );
+        assertFalse( "coap.opt.uri_query.list: query segment not expected", list.contains( value3 ) );
+        assertEquals( "coap.opt.uri_query: wrong query", total, props.get( "coap.opt.uri_query" ) );
+
+    }
+
+    @Test
+    public void testMapUriQuery() throws InvalidETagException
+    {
+        String value1= "this";
+        String value2= "is";
+        String value3= "some=query";
+        String total= "this&is";
+
+        HashMap< String, Object > props= new HashMap< String, Object >();
+        LinkedList< String > list= new LinkedList< String >();
+        list.add( value1 );
+        list.add( value2 );
+        props.put( "coap.opt.uri_query.list", list );
+
+        OptionSet set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.uri_query.list: wrong number of query segments", 2, set.getURIQueryCount() );
+        List< String > uriquerylist= set.getUriQuery();
+        assertEquals( "coap.opt.uri_query.list: missing query segment", value1, uriquerylist.get( 0 ) );
+        assertEquals( "coap.opt.uri_query.list: missing query segment", value2, uriquerylist.get( 1 ) );
+        assertFalse( "coap.opt.uri_query.list: query segment not expected", uriquerylist.contains( value3 ) );
+        assertEquals( "coap.opt.uri_query: wrong query", total, set.getUriQueryString() );
+
+        props.clear();
+        props.put( "coap.opt.uri_query", total );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.uri_query.list: wrong number of query segments", 2, set.getURIQueryCount() );
+        uriquerylist= set.getUriQuery();
+        assertEquals( "coap.opt.uri_query.list: missing query segment", value1, uriquerylist.get( 0 ) );
+        assertEquals( "coap.opt.uri_query.list: missing query segment", value2, uriquerylist.get( 1 ) );
+        assertFalse( "coap.opt.uri_query.list: query segment not expected", uriquerylist.contains( value3 ) );
+        assertEquals( "coap.opt.uri_query: wrong query", total, set.getUriQueryString() );
+    }
+
+    @Test
+    public void testOptionAccept() throws InvalidETagException
+    {
+        OptionSet set= new OptionSet();
+        Integer format= new Integer( 41 );
+        set.setAccept( format );
+
+        HashMap< String, Object > props= new HashMap< String, Object >();
+
+        Options.fillProperties( set, props );
+
+        assertEquals( "coap.opt.accept: wrong value", format, (Integer) props.get( "coap.opt.accept" ) );
+    }
+
+    @Test
+    public void testMapAccept() throws InvalidETagException
+    {
+        HashMap< String, Object > props= new HashMap< String, Object >();
+        Integer format= new Integer( 41 );
+        props.put( "coap.opt.accept", format );
+
+        OptionSet set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.accept: wrong value", format, (Integer) set.getAccept() );
+
+        props.clear();
+        props.put( "coap.opt.accept", new Integer( 41 ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.accept: wrong value", format, (Integer) set.getAccept() );
+
+        props.clear();
+        props.put( "coap.opt.accept", new String( "41" ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.accept: wrong value", format, (Integer) set.getAccept() );
+
+        props.clear();
+        props.put( "coap.opt.accept", new StringWrapper( "41" ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.accept: wrong value", format, (Integer) set.getAccept() );
+
+    }
+
+    @Test
+    public void testOptionSetLocationQuery() throws InvalidETagException
+    {
+        OptionSet set= new OptionSet();
+        String value1= "this";
+        String value2= "is";
+        String value3= "some=locationquery";
+        String total= "this&is";
+
+        set.addLocationQuery( value1 );
+        set.addLocationQuery( value2 );
+
+        HashMap< String, Object > props= new HashMap< String, Object >();
+
+        Options.fillProperties( set, props );
+
+        @SuppressWarnings("unchecked")
+        List< ETag > list= (List< ETag >) props.get( "coap.opt.location_query.list" );
+
+        assertNotNull( list );
+        assertEquals( "coap.opt.location_query.list: wrong number of query segment", 2, list.size() );
+        assertEquals( "coap.opt.location_query.list: missing query segment", value1, list.get( 0 ) );
+        assertEquals( "coap.opt.location_query.list: missing query segment", value2, list.get( 1 ) );
+        assertFalse( "coap.opt.location_query.list: query segment not expected", list.contains( value3 ) );
+        assertEquals( "coap.opt.location_query: wrong query", total, props.get( "coap.opt.location_query" ) );
+
+    }
+
+    @Test
+    public void testMapLocationQuery() throws InvalidETagException
+    {
+        String value1= "this";
+        String value2= "is";
+        String value3= "some=query";
+        String total= "this&is";
+
+        HashMap< String, Object > props= new HashMap< String, Object >();
+        LinkedList< String > list= new LinkedList< String >();
+        list.add( value1 );
+        list.add( value2 );
+        props.put( "coap.opt.location_query.list", list );
+
+        OptionSet set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.location_query.list: wrong number of query segments", 2, set.getLocationQueryCount() );
+        List< String > querylist= set.getLocationQuery();
+        assertEquals( "coap.opt.location_query.list: missing query segment", value1, querylist.get( 0 ) );
+        assertEquals( "coap.opt.location_query.list: missing query segment", value2, querylist.get( 1 ) );
+        assertFalse( "coap.opt.location_query.list: query segment not expected", querylist.contains( value3 ) );
+        assertEquals( "coap.opt.location_query: wrong query", total, set.getLocationQueryString() );
+
+        props.clear();
+        props.put( "coap.opt.location_query", total );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.location_query.list: wrong number of query segments", 2, set.getLocationQueryCount() );
+        querylist= set.getLocationQuery();
+        assertEquals( "coap.opt.location_query.list: missing query segment", value1, querylist.get( 0 ) );
+        assertEquals( "coap.opt.location_query.list: missing query segment", value2, querylist.get( 1 ) );
+        assertFalse( "coap.opt.location_query.list: query segment not expected", querylist.contains( value3 ) );
+        assertEquals( "coap.opt.location_query: wrong query", total, set.getLocationQueryString() );
+    }
+
+    @Test
+    public void testOptionProxyUri() throws InvalidETagException
+    {
+        OptionSet set= new OptionSet();
+        String uri= "testproxyuri";
+        set.setProxyUri( uri );
+
+        HashMap< String, Object > props= new HashMap< String, Object >();
+
+        Options.fillProperties( set, props );
+
+        assertEquals( "coap.opt.proxy_uri: wrong value", uri, props.get( "coap.opt.proxy_uri" ) );
+    }
+
+    @Test
+    public void testMapProxyUri() throws InvalidETagException
+    {
+        String uri= "testproxyuri";
+
+        HashMap< String, Object > props= new HashMap< String, Object >();
+        props.put( "coap.opt.proxy_uri", uri );
+
+        OptionSet set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.proxy_uri: wrong value", uri, set.getProxyUri() );
+
+        props.clear();
+        props.put( "coap.opt.proxy_uri", new StringWrapper( uri ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.proxy_uri: wrong value", uri, set.getProxyUri() );
+    }
+
+    @Test
+    public void testOptionProxyScheme() throws InvalidETagException
+    {
+        OptionSet set= new OptionSet();
+        String scheme= "testproxyscheme";
+        set.setProxyScheme( scheme );
+
+        HashMap< String, Object > props= new HashMap< String, Object >();
+
+        Options.fillProperties( set, props );
+
+        assertEquals( "coap.opt.proxy_scheme: wrong value", scheme, props.get( "coap.opt.proxy_scheme" ) );
+    }
+
+    @Test
+    public void testMapProxyScheme()
+    {
+        String scheme= "testproxyscheme";
+
+        HashMap< String, Object > props= new HashMap< String, Object >();
+        props.put( "coap.opt.proxy_scheme", scheme );
+
+        OptionSet set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.proxy_scheme: wrong value", scheme, set.getProxyScheme() );
+
+        props.clear();
+        props.put( "coap.opt.proxy_scheme", new StringWrapper( scheme ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.proxy_scheme: wrong value", scheme, set.getProxyScheme() );
+    }
+
+    @Test
+    public void testOptionBlock1() throws InvalidETagException
+    {
+        OptionSet set= new OptionSet();
+        Integer szx= 3;
+        Integer size= 128;
+        Boolean m= true;
+        Integer num= 3;
+
+        set.setBlock1( szx, m, num );
+
+        HashMap< String, Object > props= new HashMap< String, Object >();
+
+        Options.fillProperties( set, props );
+
+        assertEquals( "coap.opt.block1.szx: wrong value", szx, props.get( "coap.opt.block1.szx" ) );
+        assertEquals( "coap.opt.block1.size: wrong value", size, props.get( "coap.opt.block1.size" ) );
+        assertEquals( "coap.opt.block1.num", num, props.get( "coap.opt.block1.num" ) );
+        assertTrue( "coap.opt.block1.m: wrong value", (Boolean) props.get( "coap.opt.block1.m" ) );
+    }
+
+    @Test
+    public void testMapBlock1() throws InvalidETagException
+    {
+        Integer szx= 3;
+        Integer size= 128;
+        Boolean m= true;
+        Integer num= 3;
+        BlockOption block= new BlockOption( num, m, num );
+
+        HashMap< String, Object > props= new HashMap< String, Object >();
+        props.put( "coap.opt.block1.szx", szx );
+        props.put( "coap.opt.block1.m", m );
+        props.put( "coap.opt.block1.num", num );
+
+        OptionSet set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.block1: wrong value", set.getBlock1(), block );
+
+        props.clear();
+        props.put( "coap.opt.block1.szx", new StringWrapper( szx.toString() ) );
+        props.put( "coap.opt.block1.m", new StringWrapper( m.toString() ) );
+        props.put( "coap.opt.block1.num", new StringWrapper( num.toString() ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.block1: wrong value", set.getBlock1(), block );
+
+        props.clear();
+        props.put( "coap.opt.block1.size", size );
+        props.put( "coap.opt.block1.m", m );
+        props.put( "coap.opt.block1.num", num );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.block1: wrong value", set.getBlock1(), block );
+
+        props.clear();
+        props.put( "coap.opt.block1.size", new StringWrapper( size.toString() ) );
+        props.put( "coap.opt.block1.m", new StringWrapper( m.toString() ) );
+        props.put( "coap.opt.block1.num", new StringWrapper( num.toString() ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.block1: wrong value", set.getBlock1(), block );
+    }
+
+    @Test
+    public void testOptionBlock2() throws InvalidETagException
+    {
+        OptionSet set= new OptionSet();
+        Integer szx= 3;
+        Integer size= 128;
+        Boolean m= true;
+        Integer num= 3;
+
+        set.setBlock2( szx, m, num );
+
+        HashMap< String, Object > props= new HashMap< String, Object >();
+
+        Options.fillProperties( set, props );
+
+        assertEquals( "coap.opt.block2.szx: wrong value", szx, props.get( "coap.opt.block2.szx" ) );
+        assertEquals( "coap.opt.block2.size: wrong value", size, props.get( "coap.opt.block2.size" ) );
+        assertEquals( "coap.opt.block2.num", num, props.get( "coap.opt.block2.num" ) );
+        assertTrue( "coap.opt.block2.m: wrong value", (Boolean) props.get( "coap.opt.block2.m" ) );
+    }
+
+    @Test
+    public void testMapBlock2() throws InvalidETagException
+    {
+        Integer szx= 3;
+        Integer size= 128;
+        Boolean m= true;
+        Integer num= 3;
+        BlockOption block= new BlockOption( num, m, num );
+
+        HashMap< String, Object > props= new HashMap< String, Object >();
+        props.put( "coap.opt.block2.szx", szx );
+        props.put( "coap.opt.block2.m", m );
+        props.put( "coap.opt.block2.num", num );
+
+        OptionSet set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.block2: wrong value", set.getBlock2(), block );
+
+        props.clear();
+        props.put( "coap.opt.block2.szx", new StringWrapper( szx.toString() ) );
+        props.put( "coap.opt.block2.m", new StringWrapper( m.toString() ) );
+        props.put( "coap.opt.block2.num", new StringWrapper( num.toString() ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.block2: wrong value", set.getBlock2(), block );
+
+        props.clear();
+        props.put( "coap.opt.block2.size", size );
+        props.put( "coap.opt.block2.m", m );
+        props.put( "coap.opt.block2.num", num );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.block2: wrong value", set.getBlock2(), block );
+
+        props.clear();
+        props.put( "coap.opt.block2.size", new StringWrapper( size.toString() ) );
+        props.put( "coap.opt.block2.m", new StringWrapper( m.toString() ) );
+        props.put( "coap.opt.block2.num", new StringWrapper( num.toString() ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.block2: wrong value", set.getBlock2(), block );
+    }
+
+    @Test
+    public void testOptionSize1() throws InvalidETagException
+    {
+        OptionSet set= new OptionSet();
+        Integer size= new Integer( 120 );
+        set.setSize1( size );
+
+        HashMap< String, Object > props= new HashMap< String, Object >();
+
+        Options.fillProperties( set, props );
+
+        assertEquals( "coap.opt.size1: wrong value", size, props.get( "coap.opt.size1" ) );
+    }
+
+    @Test
+    public void testMapSize1() throws InvalidETagException
+    {
+        HashMap< String, Object > props= new HashMap< String, Object >();
+        Integer size= new Integer( 120 );
+        props.put( "coap.opt.size1", size );
+
+        OptionSet set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.size1: wrong value", size, set.getSize1() );
+
+        props.clear();
+        props.put( "coap.opt.size1", new Integer( 120 ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.size1: wrong value", size, set.getSize1() );
+
+        props.clear();
+        props.put( "coap.opt.size1", new String( "120" ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.size1: wrong value", size, set.getSize1() );
+
+        props.clear();
+        props.put( "coap.opt.size1", new StringWrapper( "120" ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.size1: wrong value", size, set.getSize1() );
+
+    }
+
+    @Test
+    public void testOptionSize2() throws InvalidETagException
+    {
+        OptionSet set= new OptionSet();
+        Integer size= new Integer( 120 );
+        set.setSize2( size );
+
+        HashMap< String, Object > props= new HashMap< String, Object >();
+
+        Options.fillProperties( set, props );
+
+        assertEquals( "coap.opt.size2: wrong value", size, props.get( "coap.opt.size2" ) );
+    }
+
+    @Test
+    public void testMapSize2() throws InvalidETagException
+    {
+        HashMap< String, Object > props= new HashMap< String, Object >();
+        Integer size= new Integer( 120 );
+        props.put( "coap.opt.size2", size );
+
+        OptionSet set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.size2: wrong value", size, set.getSize2() );
+
+        props.clear();
+        props.put( "coap.opt.size2", new Integer( 120 ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.size2: wrong value", size, set.getSize2() );
+
+        props.clear();
+        props.put( "coap.opt.size2", new String( "120" ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.size2: wrong value", size, set.getSize2() );
+
+        props.clear();
+        props.put( "coap.opt.size2", new StringWrapper( "120" ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.size2: wrong value", size, set.getSize2() );
+
+    }
+
+    @Test
+    public void testOptionObserve() throws InvalidETagException
+    {
+        OptionSet set= new OptionSet();
+        Integer seqnum= new Integer( 120 );
+        set.setObserve( seqnum );
+
+        HashMap< String, Object > props= new HashMap< String, Object >();
+
+        Options.fillProperties( set, props );
+
+        assertEquals( "coap.opt.observe: wrong value", seqnum, props.get( "coap.opt.observe" ) );
+    }
+
+    @Test
+    public void testMapObserve() throws InvalidETagException
+    {
+        HashMap< String, Object > props= new HashMap< String, Object >();
+        Integer seqnum= new Integer( 120 );
+        props.put( "coap.opt.observe", seqnum );
+
+        OptionSet set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.observe: wrong value", seqnum, set.getObserve() );
+
+        props.clear();
+        props.put( "coap.opt.observe", new Integer( 120 ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.observe: wrong value", seqnum, set.getObserve() );
+
+        props.clear();
+        props.put( "coap.opt.observe", new String( "120" ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.observe: wrong value", seqnum, set.getObserve() );
+
+        props.clear();
+        props.put( "coap.opt.observe", new StringWrapper( "120" ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "coap.opt.observe: wrong value", seqnum, set.getObserve() );
+
+    }
+
+    @Test
+    public void testOptionOther() throws InvalidETagException
+    {
+        OptionSet set= new OptionSet();
+        byte[] value1= { (byte) 0x01, (byte) 0x02, (byte) 0x03 };
+        byte[] value2= { (byte) 0x01, (byte) 0x02, (byte) 0x04 };
+        byte[] value3= { (byte) 0x01, (byte) 0x02, (byte) 0x05 };
+        byte[] value4= { (byte) 0xff, (byte) 0x02, (byte) 0x05 };
+
+        Integer optionNr1= 65000 | 0x01;
+        Integer optionNr2= 65000 | 0x02;
+        Integer optionNr3= 65000 | 0x1c;
+        Integer optionNr4= 65000 | 0x1d;
+
+        set.addOption( new Option( optionNr1, value1.clone() ) );
+        set.addOption( new Option( optionNr2, value2.clone() ) );
+        set.addOption( new Option( optionNr3, value3.clone() ) );
+        set.addOption( new Option( optionNr4, value4.clone() ) );
+
+        HashMap< String, Object > props= new HashMap< String, Object >();
+
+        Options.fillProperties( set, props );
+
+        assertArrayEquals( "coap.opt.other." + optionNr1.toString() + ": wrong value", value1, (byte[]) props.get( "coap.opt.other." + optionNr1.toString() ) );
+        assertEquals( "coap.opt.other." + optionNr1.toString() + ".critical: wrong value", true, props.get( "coap.opt.other." + optionNr1.toString() + ".critical" ) );
+        assertEquals( "coap.opt.other." + optionNr1.toString() + ".unsafe: wrong value", false, props.get( "coap.opt.other." + optionNr1.toString() + ".unsafe" ) );
+        assertEquals( "coap.opt.other." + optionNr1.toString() + ".no_cache_key: wrong value", false, props.get( "coap.opt.other." + optionNr1.toString() + ".no_cache_key" ) );
+
+        assertArrayEquals( "coap.opt.other." + optionNr2.toString() + ": wrong value", value2, (byte[]) props.get( "coap.opt.other." + optionNr2.toString() ) );
+        assertEquals( "coap.opt.other." + optionNr2.toString() + ".critical: wrong value", false, props.get( "coap.opt.other." + optionNr2.toString() + ".critical" ) );
+        assertEquals( "coap.opt.other." + optionNr2.toString() + ".unsafe: wrong value", true, props.get( "coap.opt.other." + optionNr2.toString() + ".unsafe" ) );
+        assertEquals( "coap.opt.other." + optionNr2.toString() + ".no_cache_key: wrong value", false, props.get( "coap.opt.other." + optionNr2.toString() + ".no_cache_key" ) );
+
+        assertArrayEquals( "coap.opt.other." + optionNr3.toString() + ": wrong value", value3, (byte[]) props.get( "coap.opt.other." + optionNr3.toString() ) );
+        assertEquals( "coap.opt.other." + optionNr3.toString() + ".critical: wrong value", false, props.get( "coap.opt.other." + optionNr3.toString() + ".critical" ) );
+        assertEquals( "coap.opt.other." + optionNr3.toString() + ".unsafe: wrong value", false, props.get( "coap.opt.other." + optionNr3.toString() + ".unsafe" ) );
+        assertEquals( "coap.opt.other." + optionNr3.toString() + ".no_cache_key: wrong value", true, props.get( "coap.opt.other." + optionNr3.toString() + ".no_cache_key" ) );
+
+        assertArrayEquals( "coap.opt.other." + optionNr4.toString() + ": wrong value", value4, (byte[]) props.get( "coap.opt.other." + optionNr4.toString() ) );
+        assertEquals( "coap.opt.other." + optionNr4.toString() + ".critical: wrong value", true, props.get( "coap.opt.other." + optionNr4.toString() + ".critical" ) );
+        assertEquals( "coap.opt.other." + optionNr4.toString() + ".unsafe: wrong value", false, props.get( "coap.opt.other." + optionNr4.toString() + ".unsafe" ) );
+        assertEquals( "coap.opt.other." + optionNr4.toString() + ".no_cache_key: wrong value", true, props.get( "coap.opt.other." + optionNr4.toString() + ".no_cache_key" ) );
+    }
+
+    @Test
+    public void testMapOther() throws InvalidETagException
+    {
+        HashMap< String, Object > props= new HashMap< String, Object >();
+        byte[] value1= { (byte) 0x31, (byte) 0x32, (byte) 0x30 };
+        props.put( "coap.opt.other.65001", value1.clone() );
+
+        OptionSet set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertTrue( "coap.opt.other.65001: option should exist", set.hasOption( 65001 ) );
+        assertFalse( "coap.opt.other.65002: option should not exist", set.hasOption( 65002 ) );
+        List< Option > others= set.getOthers();
+        assertEquals( "coap.opt.other.65001: too many other options", 1, others.size() );
+        assertEquals( "coap.opt.other.65001: wrong option number", 65001, others.get( 0 ).getNumber() );
+        assertArrayEquals( "coap.opt.other.65001: wrong option value", value1, others.get( 0 ).getValue() );
+
+        props.clear();
+        props.put( "coap.opt.other.65001", new Integer( 120 ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertTrue( "coap.opt.other.65001: option should exist", set.hasOption( 65001 ) );
+        assertFalse( "coap.opt.other.65002: option should not exist", set.hasOption( 65002 ) );
+        others= set.getOthers();
+        assertEquals( "coap.opt.other.65001: too many other options", 1, others.size() );
+        assertEquals( "coap.opt.other.65001: wrong option number", 65001, others.get( 0 ).getNumber() );
+        assertArrayEquals( "coap.opt.other.65001: wrong option value", value1, others.get( 0 ).getValue() );
+
+        props.clear();
+        props.put( "coap.opt.other.65001", new String( "120" ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertTrue( "coap.opt.other.65001: option should exist", set.hasOption( 65001 ) );
+        assertFalse( "coap.opt.other.65002: option should not exist", set.hasOption( 65002 ) );
+        others= set.getOthers();
+        assertEquals( "coap.opt.other.65001: too many other options", 1, others.size() );
+        assertEquals( "coap.opt.other.65001: wrong option number", 65001, others.get( 0 ).getNumber() );
+        assertArrayEquals( "coap.opt.other.65001: wrong option value", value1, others.get( 0 ).getValue() );
+
+        props.clear();
+        props.put( "coap.opt.other.65001", new StringWrapper( "120" ) );
+
+        set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertTrue( "coap.opt.other.65001: option should exist", set.hasOption( 65001 ) );
+        assertFalse( "coap.opt.other.65002: option should not exist", set.hasOption( 65002 ) );
+        others= set.getOthers();
+        assertEquals( "coap.opt.other.65001: too many other options", 1, others.size() );
+        assertEquals( "coap.opt.other.65001: wrong option number", 65001, others.get( 0 ).getNumber() );
+        assertArrayEquals( "coap.opt.other.65001: wrong option value", value1, others.get( 0 ).getValue() );
+    }
+
     private class StringWrapper
     {
         private String string;

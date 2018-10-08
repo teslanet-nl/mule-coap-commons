@@ -41,6 +41,7 @@ public class PropertyNames
     public static final String COAP_RESPONSE_SUCCESS= "coap.response.success";
 
     //options
+    //TODO: add oscore option
     public static final String COAP_OPT_IFMATCH_LIST= "coap.opt.if_match.list";
 
     public static final String COAP_OPT_URIHOST= "coap.opt.uri_host";
