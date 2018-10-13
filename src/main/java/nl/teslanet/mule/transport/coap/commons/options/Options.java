@@ -22,7 +22,6 @@ import java.util.regex.Matcher;
 
 import org.eclipse.californium.core.coap.BlockOption;
 import org.eclipse.californium.core.coap.CoAP;
-import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.coap.Option;
 import org.eclipse.californium.core.coap.OptionSet;
 
@@ -499,12 +498,21 @@ public class Options
         }
     }
 
-    public static void fillProperties( OptionSet options, Map< String, Object > props ) throws InvalidETagException
+    public static void fillPropertyMap( OptionSet options, Map< String, Object > props ) throws InvalidOptionValueException 
     {
+        String msg= "cannot create property";
         // List<byte[]> if_match_list;
         if ( !options.getIfMatch().isEmpty() )
         {
-            props.put( PropertyNames.COAP_OPT_IFMATCH_LIST, ETag.getList( options.getIfMatch() ) );
+            String propertyName= PropertyNames.COAP_OPT_IFMATCH_LIST;           
+            try
+            {
+                props.put( propertyName, ETag.getList( options.getIfMatch() ) );
+            }
+            catch ( InvalidETagException e )
+            {
+                throw new InvalidOptionValueException( propertyName, msg, e);
+            }
         }
         // String       uri_host;
         if ( options.hasUriHost() )
@@ -514,7 +522,15 @@ public class Options
         // List<byte[]> etag_list;
         if ( !options.getETags().isEmpty() )
         {
-            props.put( PropertyNames.COAP_OPT_ETAG_LIST, ETag.getList( options.getETags() ) );
+            String propertyName= PropertyNames.COAP_OPT_ETAG_LIST;           
+            try
+            {
+                props.put( propertyName, ETag.getList( options.getETags() ) );
+            }
+            catch ( InvalidETagException e )
+            {
+                throw new InvalidOptionValueException( propertyName, msg, e);
+            }
         }
         // boolean      if_none_match; // true if option is set
         props.put( PropertyNames.COAP_OPT_IFNONMATCH, Boolean.valueOf( options.hasIfNoneMatch() ) );

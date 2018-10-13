@@ -20,8 +20,6 @@ import static org.junit.Assert.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-
 import org.eclipse.californium.core.coap.BlockOption;
 import org.eclipse.californium.core.coap.Option;
 import org.eclipse.californium.core.coap.OptionSet;
@@ -31,6 +29,7 @@ import org.junit.rules.ExpectedException;
 
 import nl.teslanet.mule.transport.coap.commons.options.ETag;
 import nl.teslanet.mule.transport.coap.commons.options.InvalidETagException;
+import nl.teslanet.mule.transport.coap.commons.options.InvalidOptionValueException;
 import nl.teslanet.mule.transport.coap.commons.options.Options;
 
 
@@ -153,7 +152,7 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionSetIfMatch() throws InvalidETagException
+    public void testOptionSetIfMatch() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         byte[] etagValue1= { (byte) 0x00, (byte) 0xFF };
@@ -162,7 +161,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         @SuppressWarnings("unchecked")
         List< ETag > list= (List< ETag >) props.get( "coap.opt.if_match.list" );
@@ -172,7 +171,7 @@ public class OptionsTest
         assertTrue( "coap.opt.if_match.list: missing etag", list.contains( new ETag( etagValue1 ) ) );
         assertFalse( "coap.opt.if_match.list: etag not expected", list.contains( new ETag( etagValue2 ) ) );
     }
-
+    
     @Test
     public void testMapIfMatch() throws InvalidETagException
     {
@@ -207,7 +206,29 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionSetIfMatchMultiple() throws InvalidETagException
+    public void testMapIfMatchInvalid() throws InvalidETagException
+    {
+        byte[] etagValue1= { (byte) 0x01, (byte) 0x02,(byte) 0x03, (byte) 0x04,(byte) 0x05, (byte) 0x06,(byte) 0x07, (byte) 0x08, (byte) 0x09 };
+
+        HashMap< String, Object > props= new HashMap< String, Object >();
+        props.put( "coap.opt.if_match.list", ( etagValue1 ) );
+
+        exception.expect( IllegalArgumentException.class );
+        exception.expectMessage( "If-Match" );
+
+        OptionSet set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+        assertEquals( "if_match option has wrong count", 1, set.getIfMatchCount() );
+
+        List< ETag > list= ETag.getList( set.getIfMatch() );
+        assertEquals( "coap.opt.if_match.list: wrong number of etags", 1, list.size() );
+        assertTrue( "coap.opt.if_match.list: missing etag", list.contains( new ETag( etagValue1 ) ) );
+
+    }
+    
+    @Test
+    public void testOptionSetIfMatchMultiple() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         byte[] etagValue1= { (byte) 0x00, (byte) 0xFF };
@@ -219,7 +240,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         @SuppressWarnings("unchecked")
         List< ETag > list= (List< ETag >) props.get( "coap.opt.if_match.list" );
@@ -272,7 +293,7 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionUrihost() throws InvalidETagException
+    public void testOptionUrihost() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         String host= "testhost";
@@ -280,7 +301,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         assertEquals( "coap.opt.uri_host: wrong value", host, props.get( "coap.opt.uri_host" ) );
     }
@@ -308,7 +329,7 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionSetETag() throws InvalidETagException
+    public void testOptionSetETag() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         byte[] etagValue1= { (byte) 0x00, (byte) 0xFF };
@@ -317,7 +338,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         @SuppressWarnings("unchecked")
         List< ETag > list= (List< ETag >) props.get( "coap.opt.etag.list" );
@@ -362,7 +383,24 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionSetETagMultiple() throws InvalidETagException
+    public void testMapETagInvalid() throws InvalidETagException
+    {
+        byte[] etagValue1= { (byte) 0x01, (byte) 0x02,(byte) 0x03, (byte) 0x04,(byte) 0x05, (byte) 0x06,(byte) 0x07, (byte) 0x08, (byte) 0x09 };
+
+        HashMap< String, Object > props= new HashMap< String, Object >();
+        props.put( "coap.opt.etag.list", etagValue1 );
+
+        // TODO: ProxyHttp uses ETags that are larger than 8 bytes (20).
+        //exception.expect( IllegalArgumentException.class );
+        //exception.expectMessage( "ETag" );
+
+        OptionSet set= new OptionSet();
+        Options.fillOptionSet( set, props, true );
+
+     }
+
+    @Test
+    public void testOptionSetETagMultiple() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         byte[] etagValue1= { (byte) 0x00, (byte) 0xFF };
@@ -374,7 +412,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         @SuppressWarnings("unchecked")
         List< ETag > list= (List< ETag >) props.get( "coap.opt.etag.list" );
@@ -427,14 +465,14 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionIfNoneMatch() throws InvalidETagException
+    public void testOptionIfNoneMatch() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         set.setIfNoneMatch( new Boolean( true ) );
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         assertTrue( "coap.opt.if_none_match: wrong value", (Boolean) props.get( "coap.opt.if_none_match" ) );
 
@@ -442,7 +480,7 @@ public class OptionsTest
 
         props.clear();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         assertFalse( "coap.opt.if_none_match: wrong value", (Boolean) props.get( "coap.opt.if_none_match" ) );
     }
@@ -484,7 +522,7 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionUriPort() throws InvalidETagException
+    public void testOptionUriPort() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         Integer port= 5536;
@@ -492,7 +530,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         assertEquals( "coap.opt.uri_port: wrong value", port, (Integer) props.get( "coap.opt.uri_port" ) );
     }
@@ -520,7 +558,7 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionSetLocationPath() throws InvalidETagException
+    public void testOptionSetLocationPath() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         String value1= "this";
@@ -533,7 +571,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         @SuppressWarnings("unchecked")
         List< ETag > list= (List< ETag >) props.get( "coap.opt.location_path.list" );
@@ -586,7 +624,7 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionSetUriPath() throws InvalidETagException
+    public void testOptionSetUriPath() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         String value1= "this";
@@ -599,7 +637,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         @SuppressWarnings("unchecked")
         List< ETag > list= (List< ETag >) props.get( "coap.opt.uri_path.list" );
@@ -652,7 +690,7 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionContentFormat() throws InvalidETagException
+    public void testOptionContentFormat() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         Integer format= 41;
@@ -660,7 +698,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         assertEquals( "coap.opt.content_format: wrong value", format, (Integer) props.get( "coap.opt.content_format" ) );
     }
@@ -696,7 +734,7 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionMaxAge() throws InvalidETagException
+    public void testOptionMaxAge() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         Long maxage= new Long( 120 );
@@ -704,7 +742,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         assertEquals( "coap.opt.max_age: wrong value", maxage, (Long) props.get( "coap.opt.max_age" ) );
     }
@@ -748,7 +786,7 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionSetUriQuery() throws InvalidETagException
+    public void testOptionSetUriQuery() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         String value1= "this";
@@ -761,7 +799,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         @SuppressWarnings("unchecked")
         List< ETag > list= (List< ETag >) props.get( "coap.opt.uri_query.list" );
@@ -814,7 +852,7 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionAccept() throws InvalidETagException
+    public void testOptionAccept() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         Integer format= new Integer( 41 );
@@ -822,7 +860,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         assertEquals( "coap.opt.accept: wrong value", format, (Integer) props.get( "coap.opt.accept" ) );
     }
@@ -866,7 +904,7 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionSetLocationQuery() throws InvalidETagException
+    public void testOptionSetLocationQuery() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         String value1= "this";
@@ -879,7 +917,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         @SuppressWarnings("unchecked")
         List< ETag > list= (List< ETag >) props.get( "coap.opt.location_query.list" );
@@ -932,7 +970,7 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionProxyUri() throws InvalidETagException
+    public void testOptionProxyUri() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         String uri= "testproxyuri";
@@ -940,7 +978,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         assertEquals( "coap.opt.proxy_uri: wrong value", uri, props.get( "coap.opt.proxy_uri" ) );
     }
@@ -968,7 +1006,7 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionProxyScheme() throws InvalidETagException
+    public void testOptionProxyScheme() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         String scheme= "testproxyscheme";
@@ -976,7 +1014,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         assertEquals( "coap.opt.proxy_scheme: wrong value", scheme, props.get( "coap.opt.proxy_scheme" ) );
     }
@@ -1004,7 +1042,7 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionBlock1() throws InvalidETagException
+    public void testOptionBlock1() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         Integer szx= 3;
@@ -1016,7 +1054,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         assertEquals( "coap.opt.block1.szx: wrong value", szx, props.get( "coap.opt.block1.szx" ) );
         assertEquals( "coap.opt.block1.size: wrong value", size, props.get( "coap.opt.block1.size" ) );
@@ -1075,7 +1113,7 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionBlock2() throws InvalidETagException
+    public void testOptionBlock2() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         Integer szx= 3;
@@ -1087,7 +1125,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         assertEquals( "coap.opt.block2.szx: wrong value", szx, props.get( "coap.opt.block2.szx" ) );
         assertEquals( "coap.opt.block2.size: wrong value", size, props.get( "coap.opt.block2.size" ) );
@@ -1146,7 +1184,7 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionSize1() throws InvalidETagException
+    public void testOptionSize1() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         Integer size= new Integer( 120 );
@@ -1154,7 +1192,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         assertEquals( "coap.opt.size1: wrong value", size, props.get( "coap.opt.size1" ) );
     }
@@ -1198,7 +1236,7 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionSize2() throws InvalidETagException
+    public void testOptionSize2() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         Integer size= new Integer( 120 );
@@ -1206,7 +1244,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         assertEquals( "coap.opt.size2: wrong value", size, props.get( "coap.opt.size2" ) );
     }
@@ -1250,7 +1288,7 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionObserve() throws InvalidETagException
+    public void testOptionObserve() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         Integer seqnum= new Integer( 120 );
@@ -1258,7 +1296,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         assertEquals( "coap.opt.observe: wrong value", seqnum, props.get( "coap.opt.observe" ) );
     }
@@ -1302,7 +1340,7 @@ public class OptionsTest
     }
 
     @Test
-    public void testOptionOther() throws InvalidETagException
+    public void testOptionOther() throws InvalidETagException, InvalidOptionValueException
     {
         OptionSet set= new OptionSet();
         byte[] value1= { (byte) 0x01, (byte) 0x02, (byte) 0x03 };
@@ -1322,7 +1360,7 @@ public class OptionsTest
 
         HashMap< String, Object > props= new HashMap< String, Object >();
 
-        Options.fillProperties( set, props );
+        Options.fillPropertyMap( set, props );
 
         assertArrayEquals( "coap.opt.other." + optionNr1.toString() + ": wrong value", value1, (byte[]) props.get( "coap.opt.other." + optionNr1.toString() ) );
         assertEquals( "coap.opt.other." + optionNr1.toString() + ".critical: wrong value", true, props.get( "coap.opt.other." + optionNr1.toString() + ".critical" ) );
