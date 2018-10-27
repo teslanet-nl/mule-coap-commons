@@ -134,7 +134,7 @@ public final class ETag implements Comparable< ETag >
      * @return The etag object created.
      * @throws InvalidETagException when given string does not represent a etag length of 1..8 bytes
      */
-    static public ETag create( String hexString ) throws InvalidETagException
+    static public ETag createFromHexString( String hexString ) throws InvalidETagException
     {
         return new ETag( hexString );
     }

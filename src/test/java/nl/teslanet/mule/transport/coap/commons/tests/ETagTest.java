@@ -62,9 +62,9 @@ public class ETagTest
         byte[] etagValue2= { (byte) 0xAF, (byte) 0xB9, (byte) 0x90 };
         String etagValue3= "FF";
 
-        ETag etag1= ETag.create( etagValue1 );
+        ETag etag1= ETag.createFromHexString( etagValue1 );
         ETag etag2= ETag.create( etagValue2 );
-        ETag etag3= ETag.create( etagValue3 );
+        ETag etag3= ETag.createFromHexString( etagValue3 );
 
         assertTrue( "ETag contruction from String failed", etag1.toString().equals( etagValue1 ) );
         assertTrue( "ETag contruction from Byte[] failed", etag2.toString().equals( etagValue1 ) );
