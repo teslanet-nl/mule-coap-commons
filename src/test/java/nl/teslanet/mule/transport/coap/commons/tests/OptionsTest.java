@@ -574,7 +574,7 @@ public class OptionsTest
         Options.fillPropertyMap( set, props );
 
         @SuppressWarnings("unchecked")
-        List< ETag > list= (List< ETag >) props.get( "coap.opt.location_path.list" );
+        List< String > list= (List< String >) props.get( "coap.opt.location_path.list" );
 
         assertNotNull( list );
         assertEquals( "coap.opt.location_path.list: wrong number of path segment", 2, list.size() );
@@ -640,7 +640,7 @@ public class OptionsTest
         Options.fillPropertyMap( set, props );
 
         @SuppressWarnings("unchecked")
-        List< ETag > list= (List< ETag >) props.get( "coap.opt.uri_path.list" );
+        List< String > list= (List< String >) props.get( "coap.opt.uri_path.list" );
 
         assertNotNull( list );
         assertEquals( "coap.opt.uri_path.list: wrong number of path segment", 2, list.size() );
@@ -802,7 +802,7 @@ public class OptionsTest
         Options.fillPropertyMap( set, props );
 
         @SuppressWarnings("unchecked")
-        List< ETag > list= (List< ETag >) props.get( "coap.opt.uri_query.list" );
+        List< String > list= (List< String >) props.get( "coap.opt.uri_query.list" );
 
         assertNotNull( list );
         assertEquals( "coap.opt.uri_query.list: wrong number of query segment", 2, list.size() );
@@ -920,7 +920,7 @@ public class OptionsTest
         Options.fillPropertyMap( set, props );
 
         @SuppressWarnings("unchecked")
-        List< ETag > list= (List< ETag >) props.get( "coap.opt.location_query.list" );
+        List< String > list= (List< String >) props.get( "coap.opt.location_query.list" );
 
         assertNotNull( list );
         assertEquals( "coap.opt.location_query.list: wrong number of query segment", 2, list.size() );
