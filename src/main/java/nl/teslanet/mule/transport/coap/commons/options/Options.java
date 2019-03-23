@@ -24,6 +24,8 @@ import org.eclipse.californium.core.coap.BlockOption;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.Option;
 import org.eclipse.californium.core.coap.OptionSet;
+import org.slf4j.Logger;
+
 
 /**
  * {@code Options} is a collection of all options of a CoAP request or a response.
@@ -88,23 +90,23 @@ public class Options
         this.optionSet= optionSet;
     }
 
-//    private void assureBlock1Exists()
-//    {
-//        if ( !hasBlock1() )
-//        {
-//            setBlock1( new BlockOption() );
-//        }
-//
-//    }
-//
-//    private void assureBlock2Exists()
-//    {
-//        if ( !hasBlock1() )
-//        {
-//            setBlock2( new BlockOption() );
-//        }
-//
-//    }
+    //    private void assureBlock1Exists()
+    //    {
+    //        if ( !hasBlock1() )
+    //        {
+    //            setBlock1( new BlockOption() );
+    //        }
+    //
+    //    }
+    //
+    //    private void assureBlock2Exists()
+    //    {
+    //        if ( !hasBlock1() )
+    //        {
+    //            setBlock2( new BlockOption() );
+    //        }
+    //
+    //    }
 
     private static Long toLong( Object object )
     {
@@ -170,11 +172,11 @@ public class Options
     }
 
     @SuppressWarnings("unchecked")
-    public static void fillOptionSet( OptionSet optionSet, Map< String, Object > props, boolean clear)
+    public static void fillOptionSet( OptionSet optionSet, Map< String, Object > props, boolean clear )
     {
         //make sure Optionset is empty, if needed
         if ( clear ) optionSet.clear();
-        
+
         for ( Entry< String, Object > e : props.entrySet() )
         {
             /*OptionSet() */
@@ -349,13 +351,13 @@ public class Options
                     {
                         int szx= BlockOption.size2Szx( toInteger( e.getValue() ) );
                         boolean m= false;
-                        int num= 0; 
-                        if ( optionSet.hasBlock1())
+                        int num= 0;
+                        if ( optionSet.hasBlock1() )
                         {
                             m= optionSet.getBlock1().isM();
                             num= optionSet.getBlock1().getNum();
                         }
-                        optionSet.setBlock1(szx, m, num);
+                        optionSet.setBlock1( szx, m, num );
                     }
                     break;
                 case PropertyNames.COAP_OPT_BLOCK1_SZX:
@@ -363,13 +365,13 @@ public class Options
                     {
                         int szx= toInteger( e.getValue() );
                         boolean m= false;
-                        int num= 0; 
-                        if ( optionSet.hasBlock1())
+                        int num= 0;
+                        if ( optionSet.hasBlock1() )
                         {
                             m= optionSet.getBlock1().isM();
                             num= optionSet.getBlock1().getNum();
                         }
-                        optionSet.setBlock1(szx, m, num);
+                        optionSet.setBlock1( szx, m, num );
                     }
                     break;
                 case PropertyNames.COAP_OPT_BLOCK1_NUM:
@@ -377,27 +379,27 @@ public class Options
                     {
                         int szx= 0;
                         boolean m= false;
-                        int num= toInteger( e.getValue() ); 
-                        if ( optionSet.hasBlock1())
+                        int num= toInteger( e.getValue() );
+                        if ( optionSet.hasBlock1() )
                         {
                             szx= optionSet.getBlock1().getSzx();
                             m= optionSet.getBlock1().isM();
                         }
-                        optionSet.setBlock1(szx, m, num);
+                        optionSet.setBlock1( szx, m, num );
                     }
                     break;
                 case PropertyNames.COAP_OPT_BLOCK1_M:
                     if ( Object.class.isInstance( e.getValue() ) )
                     {
                         int szx= 0;
-                        boolean m= toBoolean( e.getValue());
-                        int num= 0; 
-                        if ( optionSet.hasBlock1())
+                        boolean m= toBoolean( e.getValue() );
+                        int num= 0;
+                        if ( optionSet.hasBlock1() )
                         {
                             szx= optionSet.getBlock1().getSzx();
                             num= optionSet.getBlock1().getNum();
                         }
-                        optionSet.setBlock1(szx, m, num);
+                        optionSet.setBlock1( szx, m, num );
                     }
                     break;
                 /*
@@ -408,26 +410,27 @@ public class Options
                     {
                         int szx= BlockOption.size2Szx( toInteger( e.getValue() ) );
                         boolean m= false;
-                        int num= 0; 
-                        if ( optionSet.hasBlock2())
+                        int num= 0;
+                        if ( optionSet.hasBlock2() )
                         {
                             m= optionSet.getBlock2().isM();
                             num= optionSet.getBlock2().getNum();
                         }
-                        optionSet.setBlock2(szx, m, num);                    }
+                        optionSet.setBlock2( szx, m, num );
+                    }
                     break;
                 case PropertyNames.COAP_OPT_BLOCK2_SZX:
                     if ( Object.class.isInstance( e.getValue() ) )
                     {
                         int szx= toInteger( e.getValue() );
                         boolean m= false;
-                        int num= 0; 
-                        if ( optionSet.hasBlock2())
+                        int num= 0;
+                        if ( optionSet.hasBlock2() )
                         {
                             m= optionSet.getBlock2().isM();
                             num= optionSet.getBlock2().getNum();
                         }
-                        optionSet.setBlock2(szx, m, num);
+                        optionSet.setBlock2( szx, m, num );
                     }
                     break;
                 case PropertyNames.COAP_OPT_BLOCK2_NUM:
@@ -435,27 +438,27 @@ public class Options
                     {
                         int szx= 0;
                         boolean m= false;
-                        int num= toInteger( e.getValue() ); 
-                        if ( optionSet.hasBlock2())
+                        int num= toInteger( e.getValue() );
+                        if ( optionSet.hasBlock2() )
                         {
                             szx= optionSet.getBlock2().getSzx();
                             m= optionSet.getBlock2().isM();
                         }
-                        optionSet.setBlock2(szx, m, num);
+                        optionSet.setBlock2( szx, m, num );
                     }
                     break;
                 case PropertyNames.COAP_OPT_BLOCK2_M:
                     if ( Object.class.isInstance( e.getValue() ) )
                     {
                         int szx= 0;
-                        boolean m= toBoolean( e.getValue());
-                        int num= 0; 
-                        if ( optionSet.hasBlock2())
+                        boolean m= toBoolean( e.getValue() );
+                        int num= 0;
+                        if ( optionSet.hasBlock2() )
                         {
                             szx= optionSet.getBlock2().getSzx();
                             num= optionSet.getBlock2().getNum();
                         }
-                        optionSet.setBlock2(szx, m, num);
+                        optionSet.setBlock2( szx, m, num );
                     }
                     break;
                 /*
@@ -498,20 +501,74 @@ public class Options
         }
     }
 
-    public static void fillPropertyMap( OptionSet options, Map< String, Object > props ) throws InvalidOptionValueException 
+    /**
+     * Fill property map with properties contained in given optionSet.
+     * Processing options stops when an exception occurs.
+     * @param options source of the properties
+     * @param props map to put properties in
+     * @throws InvalidOptionValueException when option value could not be converted into a property
+     */
+    public static void fillPropertyMap( OptionSet options, Map< String, Object > props ) throws InvalidOptionValueException
     {
-        String msg= "cannot create property";
+        String errorMsg= "cannot create property";
+        fillPropertyMapLoggingOrThrowingErrors( options, props, null, errorMsg );
+    }
+
+    /**
+     * Fill property map with properties contained in given optionSet.
+     * Processing options continues when an exception occurs, after logging an error message.
+     * @param options source of the properties
+     * @param props map to put properties in
+     * @param logger uses for logging errors
+     * @param errorMsg message to log on errors
+     */
+    public static void fillPropertyMap( OptionSet options, Map< String, Object > props, Logger logger, String errorMsg )
+    {
+        try
+        {
+            fillPropertyMapLoggingOrThrowingErrors( options, props, logger, errorMsg );
+        }
+        catch ( InvalidOptionValueException e )
+        {
+            //noop, should not occur when a logger is given
+        }
+    }
+    
+    /**
+     * Handle error that occurs during property processing
+     * @param propertyName 
+     * @param e cause exception
+     * @param logger logger to use for logging when not null
+     * @param errorMsg that will be logged or put into exception
+     * @throws InvalidOptionValueException thrown when when logger is null in stead of logging
+     */
+    private static void handlePropertyError( String propertyName, Exception e, Logger logger, String errorMsg ) throws InvalidOptionValueException
+    {
+        InvalidOptionValueException exception= new InvalidOptionValueException( propertyName, errorMsg, e );
+        if ( logger == null )
+        {
+            throw exception;
+        }
+        else
+        {
+            logger.error( errorMsg + " { " + propertyName + " }", exception );
+        }
+        
+    }
+
+    private static void fillPropertyMapLoggingOrThrowingErrors( OptionSet options, Map< String, Object > props, final Logger logger, String errorMsg ) throws InvalidOptionValueException
+    {
         // List<byte[]> if_match_list;
         if ( !options.getIfMatch().isEmpty() )
         {
-            String propertyName= PropertyNames.COAP_OPT_IFMATCH_LIST;           
+            String propertyName= PropertyNames.COAP_OPT_IFMATCH_LIST;
             try
             {
                 props.put( propertyName, ETag.getList( options.getIfMatch() ) );
             }
             catch ( InvalidETagException e )
             {
-                throw new InvalidOptionValueException( propertyName, msg, e);
+                handlePropertyError( propertyName, e, logger, errorMsg );
             }
         }
         // String       uri_host;
@@ -522,14 +579,14 @@ public class Options
         // List<byte[]> etag_list;
         if ( !options.getETags().isEmpty() )
         {
-            String propertyName= PropertyNames.COAP_OPT_ETAG_LIST;           
+            String propertyName= PropertyNames.COAP_OPT_ETAG_LIST;
             try
             {
                 props.put( propertyName, ETag.getList( options.getETags() ) );
             }
             catch ( InvalidETagException e )
             {
-                throw new InvalidOptionValueException( propertyName, msg, e);
+                handlePropertyError( propertyName, e, logger, errorMsg );
             }
         }
         // boolean      if_none_match; // true if option is set
