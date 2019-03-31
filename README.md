@@ -24,7 +24,7 @@ $ mvn clean install
 
 # Using in Maven Projects
 
-Mule CoAP artifact releases will be publishedses to [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Cmule-coap).
+Mule CoAP artifact releases will be published to [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Cmule-coap).
 Usually the Commons component dependency will added through one of the connector pom's and there is no need to add the 
 dependency manually. But if you need for some reason to add it as a library in your projects, add the following dependency
 to your `pom.xml` (without the dots):
@@ -35,16 +35,12 @@ to your `pom.xml` (without the dots):
     <dependency>
             <groupId>nl.teslanet.mule.transport.coap</groupId>
             <artifactId>mule-coap-commons</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0</version>
     </dependency>
     ...
   </dependencies>
   ...
 ```
-
-# Current Builds
-
-TBD
 
 
 # Contact
