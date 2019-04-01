@@ -30,16 +30,13 @@ dependency manually. But if you need for some reason to add it as a library in y
 to your `pom.xml` (without the dots):
 
 ```xml
-  <dependencies>
-    ...
+
     <dependency>
             <groupId>nl.teslanet.mule.transport.coap</groupId>
             <artifactId>mule-coap-commons</artifactId>
             <version>1.1.0</version>
     </dependency>
-    ...
-  </dependencies>
-  ...
+    
 ```
 
 
